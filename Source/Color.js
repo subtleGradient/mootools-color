@@ -6,9 +6,9 @@ provides: Color
 ...
 */
 
-(function(){
+(function(exports){
 
-this.Color = function(color, type){
+var Color = exports.Color = function(color, type){
 	
 	if (color.isColor){
 		
@@ -43,13 +43,13 @@ var limit = function(number, min, max){
 var listMatch = /([-.\d]+)\s*,\s*([-.\d]+)\s*,\s*([-.\d]+)\s*,?\s*([-.\d]*)/;
 var hexMatch = /^#?([a-f0-9]{1,2})([a-f0-9]{1,2})([a-f0-9]{1,2})([a-f0-9]{0,2})$/i;
 
-Color.parseRGB = function(color){
+exports.Color.parseRGB = function(color){
 	return color.match(listMatch).slice(1).map(function(bit, i){
 		return (i < 3) ? Math.round(((bit %= 256) < 0) ? bit + 256 : bit) : limit(((bit === '') ? 1 : Number(bit)), 0, 1);
 	});
 };
 	
-Color.parseHEX = function(color){
+exports.Color.parseHEX = function(color){
 	if (color.length == 1) color = color + color + color;
 	return color.match(hexMatch).slice(1).map(function(bit, i){
 		if (i == 3) return (bit) ? parseInt(bit, 16) / 255 : 1;
@@ -57,7 +57,7 @@ Color.parseHEX = function(color){
 	});
 };
 	
-Color.parseHSB = function(color){
+exports.Color.parseHSB = function(color){
 	var hsb = color.match(listMatch).slice(1).map(function(bit, i){
 		if (i === 0) return Math.round(((bit %= 360) < 0) ? (bit + 360) : bit);
 		else if (i < 3) return limit(Math.round(bit), 0, 100);
@@ -90,7 +90,7 @@ var toString = function(type, array){
 	return type + '(' + array.join(', ') + ')';
 };
 
-Color.prototype = {
+exports.Color.prototype = {
 
 	toHSB: function(array){
 		var red = this.red, green = this.green, blue = this.blue, alpha = this.alpha;
@@ -128,24 +128,24 @@ Color.prototype = {
 
 };
 
-Color.prototype.toString = Color.prototype.toRGB;
+exports.Color.prototype.toString = Color.prototype.toRGB;
 
-Color.hex = function(hex){
+exports.Color.hex = function(hex){
 	return new Color(hex, 'hex');
 };
 
-if (this.hex == null) this.hex = Color.hex;
+if (exports.hex == null) exports.hex = Color.hex;
 
-Color.hsb = function(h, s, b, a){
+exports.Color.hsb = function(h, s, b, a){
 	return new Color([h || 0, s || 0, b || 0, (a == null) ? 1 : a], 'hsb');
 };
 
-if (this.hsb == null) this.hsb = Color.hsb;
+if (exports.hsb == null) exports.hsb = Color.hsb;
 
-Color.rgb = function(r, g, b, a){
+exports.Color.rgb = function(r, g, b, a){
 	return new Color([r || 0, g || 0, b || 0, (a == null) ? 1 : a], 'rgb');
 };
 
-if (this.rgb == null) this.rgb = Color.rgb;
+if (exports.rgb == null) exports.rgb = Color.rgb;
 
-})();
+})(typeof exports < 'u' ? exports : this);
